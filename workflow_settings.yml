@@ -1,0 +1,5 @@
+defaultProject: shopkart-enterprise-platform
+defaultDataset: warehouse_staging
+defaultLocation: europe-west2
+defaultAssertionDataset: warehouse_assertions
+dataformCoreVersion: "3.0.43"

@@ -1,0 +1,6 @@
+config {
+  type: "declaration",
+  database: "shopkart-enterprise-platform",
+  schema: "warehouse_raw",
+  name: "public_payments"
+}

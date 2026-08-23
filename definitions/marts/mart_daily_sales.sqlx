@@ -1,0 +1,14 @@
+config {
+  type: "table",
+  schema: "warehouse_marts"
+}
+
+SELECT
+  DATE(ordered_at) AS sales_date,
+  COUNT(DISTINCT order_id) AS total_orders,
+  COUNT(DISTINCT customer_id) AS unique_customers,
+  SUM(line_revenue) AS revenue
+FROM ${ref("fact_order_items")}
+WHERE order_status = 'COMPLETED'
+GROUP BY sales_date
+ORDER BY sales_date

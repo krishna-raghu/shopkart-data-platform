@@ -1,0 +1,18 @@
+config {
+  type: "view",
+  schema: "warehouse_staging",
+  assertions: {
+    uniqueKey: ["customer_id"],
+    nonNull: ["customer_id", "email"]
+  }
+}
+
+SELECT
+  customer_id,
+  TRIM(first_name) AS first_name,
+  TRIM(last_name) AS last_name,
+  LOWER(TRIM(email)) AS email,
+  TRIM(city) AS city,
+  created_at,
+  updated_at
+FROM ${ref("public_customers")}

@@ -1,0 +1,12 @@
+config {
+  type: "table",
+  schema: "warehouse_core"
+}
+
+SELECT
+  product_id,
+  product_name,
+  category,
+  unit_price,
+  updated_at
+FROM ${ref("stg_products")}

@@ -1,0 +1,23 @@
+config {
+  type: "table",
+  schema: "warehouse_core",
+  bigquery: {
+    partitionBy: "DATE(ordered_at)",
+    clusterBy: ["customer_id", "product_id"]
+  }
+}
+
+SELECT
+  oi.order_item_id,
+  oi.order_id,
+  o.customer_id,
+  oi.product_id,
+  oi.quantity,
+  oi.unit_price,
+  oi.quantity * oi.unit_price AS line_revenue,
+  o.order_status,
+  o.order_total,
+  o.ordered_at
+FROM ${ref("stg_order_items")} oi
+JOIN ${ref("stg_orders")} o
+USING(order_id)

@@ -1,0 +1,17 @@
+config {
+  type: "view",
+  schema: "warehouse_staging",
+  assertions: {
+    uniqueKey: ["order_id"],
+    nonNull: ["order_id", "customer_id"]
+  }
+}
+
+SELECT
+  CAST(order_id AS INT64) AS order_id,
+  CAST(customer_id AS INT64) AS customer_id,
+  UPPER(TRIM(order_status)) AS order_status,
+  CAST(order_total AS NUMERIC) AS order_total,
+  ordered_at,
+  updated_at
+FROM ${ref("public_orders")}

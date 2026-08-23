@@ -1,0 +1,30 @@
+config {
+  type: "table",
+  schema: "warehouse_core"
+}
+
+WITH date_range AS (
+  SELECT
+    MIN(DATE(ordered_at)) AS min_date,
+    MAX(DATE(ordered_at)) AS max_date
+  FROM ${ref("stg_orders")}
+)
+
+SELECT
+  date_day AS date,
+  EXTRACT(YEAR FROM date_day) AS year,
+  EXTRACT(QUARTER FROM date_day) AS quarter,
+  EXTRACT(MONTH FROM date_day) AS month,
+  EXTRACT(WEEK FROM date_day) AS week,
+  EXTRACT(DAY FROM date_day) AS day,
+  FORMAT_DATE('%A', date_day) AS day_name,
+  FORMAT_DATE('%B', date_day) AS month_name,
+  CASE
+    WHEN EXTRACT(DAYOFWEEK FROM date_day) IN (1, 7)
+      THEN TRUE
+    ELSE FALSE
+  END AS is_weekend
+FROM date_range,
+UNNEST(
+  GENERATE_DATE_ARRAY(min_date, max_date)
+) AS date_day

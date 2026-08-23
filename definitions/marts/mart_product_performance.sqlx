@@ -1,0 +1,43 @@
+config {
+  type: "table",
+  schema: "warehouse_marts"
+}
+
+SELECT
+  p.product_id,
+  p.product_name,
+  p.category,
+  p.unit_price,
+
+  COUNT(DISTINCT f.order_id) AS total_orders,
+
+  SUM(f.quantity) AS units_sold,
+
+  SUM(
+    CASE
+      WHEN f.order_status = 'COMPLETED'
+      THEN f.quantity
+      ELSE 0
+    END
+  ) AS completed_units_sold,
+
+  SUM(
+    CASE
+      WHEN f.order_status = 'COMPLETED'
+      THEN f.line_revenue
+      ELSE 0
+    END
+  ) AS total_revenue,
+
+  AVG(f.unit_price) AS average_selling_price
+
+FROM ${ref("dim_product")} p
+
+LEFT JOIN ${ref("fact_order_items")} f
+  ON p.product_id = f.product_id
+
+GROUP BY
+  p.product_id,
+  p.product_name,
+  p.category,
+  p.unit_price

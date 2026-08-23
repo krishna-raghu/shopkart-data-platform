@@ -1,0 +1,16 @@
+config {
+  type: "view",
+  schema: "warehouse_staging",
+  assertions: {
+    uniqueKey: ["product_id"],
+    nonNull: ["product_id", "product_name", "unit_price"]
+  }
+}
+
+SELECT
+  CAST(product_id AS INT64) AS product_id,
+  TRIM(product_name) AS product_name,
+  TRIM(category) AS category,
+  CAST(unit_price AS NUMERIC) AS unit_price,
+  updated_at
+FROM ${ref("public_products")}

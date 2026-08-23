@@ -1,0 +1,51 @@
+config {
+  type: "table",
+  schema: "warehouse_marts"
+}
+
+SELECT
+  c.customer_id,
+  c.customer_name,
+  c.email,
+  c.city,
+
+  COUNT(DISTINCT f.order_id) AS total_orders,
+
+  COUNT(DISTINCT CASE
+    WHEN f.order_status = 'COMPLETED'
+    THEN f.order_id
+  END) AS completed_orders,
+
+  COALESCE(
+    SUM(
+      CASE
+        WHEN f.order_status = 'COMPLETED'
+        THEN f.line_revenue
+        ELSE 0
+      END
+    ),
+    0
+  ) AS total_revenue,
+
+  COALESCE(
+    AVG(
+      CASE
+        WHEN f.order_status = 'COMPLETED'
+        THEN f.line_revenue
+      END
+    ),
+    0
+  ) AS average_order_item_value,
+
+  MAX(f.ordered_at) AS last_order_at
+
+FROM ${ref("dim_customer")} c
+
+LEFT JOIN ${ref("fact_order_items")} f
+  ON c.customer_id = f.customer_id
+
+GROUP BY
+  c.customer_id,
+  c.customer_name,
+  c.email,
+  c.city
