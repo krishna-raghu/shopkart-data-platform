@@ -1,6 +1,10 @@
 config {
   type: "view",
-  schema: "warehouse_staging"
+  schema: "warehouse_staging",
+  assertions: {
+    uniqueKey: ["customer_id"],
+    nonNull: ["customer_id", "email"]
+  }
 }
 
 SELECT
