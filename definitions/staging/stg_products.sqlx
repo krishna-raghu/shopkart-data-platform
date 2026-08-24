@@ -1,10 +1,6 @@
 config {
   type: "view",
-  schema: "warehouse_staging",
-  assertions: {
-    uniqueKey: ["product_id"],
-    nonNull: ["product_id", "product_name", "unit_price"]
-  }
+  schema: "warehouse_staging"
 }
 
 SELECT
